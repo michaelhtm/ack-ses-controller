@@ -1,0 +1,8 @@
+service:
+  full_name: Simple Email Service
+  short_name: SES
+  link: https://aws.amazon.com/ses/
+  documentation: https://docs.aws.amazon.com/ses/
+api_versions:
+  - api_version: v1alpha1
+    status: available
