@@ -10,9 +10,6 @@ ignore:
 
   field_paths:
     - CreateConfigurationSetInput.ConfigurationSet
-
-model_name: email
-
 resources:
   ConfigurationSet:
     fields:
@@ -36,6 +33,9 @@ resources:
     tags:
       ignore: true
     exceptions:
+      errors:
+        404:
+          code: ConfigurationSetDoesNotExist
       terminal_codes:
         - ConfigurationSetAlreadyExists
         - InvalidConfigurationSet

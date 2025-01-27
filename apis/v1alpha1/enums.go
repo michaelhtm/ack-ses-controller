@@ -18,94 +18,94 @@ package v1alpha1
 type BehaviorOnMXFailure string
 
 const (
-	BehaviorOnMXFailure_UseDefaultValue BehaviorOnMXFailure = "UseDefaultValue"
 	BehaviorOnMXFailure_RejectMessage   BehaviorOnMXFailure = "RejectMessage"
+	BehaviorOnMXFailure_UseDefaultValue BehaviorOnMXFailure = "UseDefaultValue"
 )
 
 type BounceType string
 
 const (
-	BounceType_DoesNotExist     BounceType = "DoesNotExist"
-	BounceType_MessageTooLarge  BounceType = "MessageTooLarge"
-	BounceType_ExceededQuota    BounceType = "ExceededQuota"
 	BounceType_ContentRejected  BounceType = "ContentRejected"
-	BounceType_Undefined        BounceType = "Undefined"
+	BounceType_DoesNotExist     BounceType = "DoesNotExist"
+	BounceType_ExceededQuota    BounceType = "ExceededQuota"
+	BounceType_MessageTooLarge  BounceType = "MessageTooLarge"
 	BounceType_TemporaryFailure BounceType = "TemporaryFailure"
+	BounceType_Undefined        BounceType = "Undefined"
 )
 
 type BulkEmailStatus string
 
 const (
-	BulkEmailStatus_Success                       BulkEmailStatus = "Success"
-	BulkEmailStatus_MessageRejected               BulkEmailStatus = "MessageRejected"
-	BulkEmailStatus_MailFromDomainNotVerified     BulkEmailStatus = "MailFromDomainNotVerified"
-	BulkEmailStatus_ConfigurationSetDoesNotExist  BulkEmailStatus = "ConfigurationSetDoesNotExist"
-	BulkEmailStatus_TemplateDoesNotExist          BulkEmailStatus = "TemplateDoesNotExist"
+	BulkEmailStatus_AccountDailyQuotaExceeded     BulkEmailStatus = "AccountDailyQuotaExceeded"
+	BulkEmailStatus_AccountSendingPaused          BulkEmailStatus = "AccountSendingPaused"
 	BulkEmailStatus_AccountSuspended              BulkEmailStatus = "AccountSuspended"
 	BulkEmailStatus_AccountThrottled              BulkEmailStatus = "AccountThrottled"
-	BulkEmailStatus_AccountDailyQuotaExceeded     BulkEmailStatus = "AccountDailyQuotaExceeded"
-	BulkEmailStatus_InvalidSendingPoolName        BulkEmailStatus = "InvalidSendingPoolName"
-	BulkEmailStatus_AccountSendingPaused          BulkEmailStatus = "AccountSendingPaused"
+	BulkEmailStatus_ConfigurationSetDoesNotExist  BulkEmailStatus = "ConfigurationSetDoesNotExist"
 	BulkEmailStatus_ConfigurationSetSendingPaused BulkEmailStatus = "ConfigurationSetSendingPaused"
-	BulkEmailStatus_InvalidParameterValue         BulkEmailStatus = "InvalidParameterValue"
-	BulkEmailStatus_TransientFailure              BulkEmailStatus = "TransientFailure"
 	BulkEmailStatus_Failed                        BulkEmailStatus = "Failed"
+	BulkEmailStatus_InvalidParameterValue         BulkEmailStatus = "InvalidParameterValue"
+	BulkEmailStatus_InvalidSendingPoolName        BulkEmailStatus = "InvalidSendingPoolName"
+	BulkEmailStatus_MailFromDomainNotVerified     BulkEmailStatus = "MailFromDomainNotVerified"
+	BulkEmailStatus_MessageRejected               BulkEmailStatus = "MessageRejected"
+	BulkEmailStatus_Success                       BulkEmailStatus = "Success"
+	BulkEmailStatus_TemplateDoesNotExist          BulkEmailStatus = "TemplateDoesNotExist"
+	BulkEmailStatus_TransientFailure              BulkEmailStatus = "TransientFailure"
 )
 
 type ConfigurationSetAttribute string
 
 const (
-	ConfigurationSetAttribute_eventDestinations ConfigurationSetAttribute = "eventDestinations"
-	ConfigurationSetAttribute_trackingOptions   ConfigurationSetAttribute = "trackingOptions"
 	ConfigurationSetAttribute_deliveryOptions   ConfigurationSetAttribute = "deliveryOptions"
+	ConfigurationSetAttribute_eventDestinations ConfigurationSetAttribute = "eventDestinations"
 	ConfigurationSetAttribute_reputationOptions ConfigurationSetAttribute = "reputationOptions"
+	ConfigurationSetAttribute_trackingOptions   ConfigurationSetAttribute = "trackingOptions"
 )
 
 type CustomMailFromStatus string
 
 const (
+	CustomMailFromStatus_Failed           CustomMailFromStatus = "Failed"
 	CustomMailFromStatus_Pending          CustomMailFromStatus = "Pending"
 	CustomMailFromStatus_Success          CustomMailFromStatus = "Success"
-	CustomMailFromStatus_Failed           CustomMailFromStatus = "Failed"
 	CustomMailFromStatus_TemporaryFailure CustomMailFromStatus = "TemporaryFailure"
 )
 
 type DimensionValueSource string
 
 const (
-	DimensionValueSource_messageTag  DimensionValueSource = "messageTag"
 	DimensionValueSource_emailHeader DimensionValueSource = "emailHeader"
 	DimensionValueSource_linkTag     DimensionValueSource = "linkTag"
+	DimensionValueSource_messageTag  DimensionValueSource = "messageTag"
 )
 
 type DsnAction string
 
 const (
-	DsnAction_failed    DsnAction = "failed"
 	DsnAction_delayed   DsnAction = "delayed"
 	DsnAction_delivered DsnAction = "delivered"
-	DsnAction_relayed   DsnAction = "relayed"
 	DsnAction_expanded  DsnAction = "expanded"
+	DsnAction_failed    DsnAction = "failed"
+	DsnAction_relayed   DsnAction = "relayed"
 )
 
 type EventType string
 
 const (
-	EventType_send             EventType = "send"
-	EventType_reject           EventType = "reject"
 	EventType_bounce           EventType = "bounce"
+	EventType_click            EventType = "click"
 	EventType_complaint        EventType = "complaint"
 	EventType_delivery         EventType = "delivery"
 	EventType_open             EventType = "open"
-	EventType_click            EventType = "click"
+	EventType_reject           EventType = "reject"
 	EventType_renderingFailure EventType = "renderingFailure"
+	EventType_send             EventType = "send"
 )
 
 type IdentityType string
 
 const (
-	IdentityType_EmailAddress IdentityType = "EmailAddress"
 	IdentityType_Domain       IdentityType = "Domain"
+	IdentityType_EmailAddress IdentityType = "EmailAddress"
 )
 
 type InvocationType string
@@ -126,15 +126,15 @@ const (
 type ReceiptFilterPolicy string
 
 const (
-	ReceiptFilterPolicy_Block ReceiptFilterPolicy = "Block"
 	ReceiptFilterPolicy_Allow ReceiptFilterPolicy = "Allow"
+	ReceiptFilterPolicy_Block ReceiptFilterPolicy = "Block"
 )
 
 type SNSActionEncoding string
 
 const (
-	SNSActionEncoding_UTF_8  SNSActionEncoding = "UTF-8"
 	SNSActionEncoding_Base64 SNSActionEncoding = "Base64"
+	SNSActionEncoding_UTF_8  SNSActionEncoding = "UTF-8"
 )
 
 type StopScope string
@@ -146,16 +146,16 @@ const (
 type TLSPolicy string
 
 const (
-	TLSPolicy_Require  TLSPolicy = "Require"
 	TLSPolicy_Optional TLSPolicy = "Optional"
+	TLSPolicy_Require  TLSPolicy = "Require"
 )
 
 type VerificationStatus string
 
 const (
+	VerificationStatus_Failed           VerificationStatus = "Failed"
+	VerificationStatus_NotStarted       VerificationStatus = "NotStarted"
 	VerificationStatus_Pending          VerificationStatus = "Pending"
 	VerificationStatus_Success          VerificationStatus = "Success"
-	VerificationStatus_Failed           VerificationStatus = "Failed"
 	VerificationStatus_TemporaryFailure VerificationStatus = "TemporaryFailure"
-	VerificationStatus_NotStarted       VerificationStatus = "NotStarted"
 )
