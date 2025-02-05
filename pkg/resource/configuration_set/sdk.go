@@ -28,8 +28,10 @@ import (
 	ackerr "github.com/aws-controllers-k8s/runtime/pkg/errors"
 	ackrequeue "github.com/aws-controllers-k8s/runtime/pkg/requeue"
 	ackrtlog "github.com/aws-controllers-k8s/runtime/pkg/runtime/log"
-	"github.com/aws/aws-sdk-go/aws"
-	svcsdk "github.com/aws/aws-sdk-go/service/ses"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	svcsdk "github.com/aws/aws-sdk-go-v2/service/ses"
+	svcsdktypes "github.com/aws/aws-sdk-go-v2/service/ses/types"
+	smithy "github.com/aws/smithy-go"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -40,8 +42,7 @@ import (
 var (
 	_ = &metav1.Time{}
 	_ = strings.ToLower("")
-	_ = &aws.JSONValue{}
-	_ = &svcsdk.SES{}
+	_ = &svcsdk.Client{}
 	_ = &svcapitypes.ConfigurationSet{}
 	_ = ackv1alpha1.AWSAccountID("")
 	_ = &ackerr.NotFound
@@ -49,6 +50,7 @@ var (
 	_ = &reflect.Value{}
 	_ = fmt.Sprintf("")
 	_ = &ackrequeue.NoRequeue{}
+	_ = &aws.Config{}
 )
 
 // sdkFind returns SDK-specific information about a supplied resource
@@ -74,21 +76,13 @@ func (rm *resourceManager) sdkFind(
 	}
 
 	var resp *svcsdk.DescribeConfigurationSetOutput
-	resp, err = rm.sdkapi.DescribeConfigurationSetWithContext(ctx, input)
+	resp, err = rm.sdkapi.DescribeConfigurationSet(ctx, input)
 	_ = resp
-	if err != nil {
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == svcsdk.ErrCodeConfigurationSetDoesNotExistException {
-			rm.metrics.RecordAPICall("READ_ONE", "DescribeConfigurationSet", err)
-			return nil, ackerr.NotFound
-		}
-	}
 
 	rm.metrics.RecordAPICall("READ_ONE", "DescribeConfigurationSet", err)
 	if err != nil {
-		if reqErr, ok := ackerr.AWSRequestFailure(err); ok && reqErr.StatusCode() == 404 {
-			return nil, ackerr.NotFound
-		}
-		if awsErr, ok := ackerr.AWSError(err); ok && awsErr.Code() == "UNKNOWN" {
+		var awsErr smithy.APIError
+		if errors.As(err, &awsErr) && awsErr.ErrorCode() == "ConfigurationSetDoesNotExist" {
 			return nil, ackerr.NotFound
 		}
 		return nil, err
@@ -120,7 +114,7 @@ func (rm *resourceManager) newDescribeRequestPayload(
 	res := &svcsdk.DescribeConfigurationSetInput{}
 
 	if r.ko.Spec.Name != nil {
-		res.SetConfigurationSetName(*r.ko.Spec.Name)
+		res.ConfigurationSetName = r.ko.Spec.Name
 	}
 
 	return res, nil
@@ -142,13 +136,13 @@ func (rm *resourceManager) sdkCreate(
 	if err != nil {
 		return nil, err
 	}
-	input.SetConfigurationSet(&svcsdk.ConfigurationSet{
+	input.ConfigurationSet = &svcsdktypes.ConfigurationSet{
 		Name: desired.ko.Spec.Name,
-	})
+	}
 
 	var resp *svcsdk.CreateConfigurationSetOutput
 	_ = resp
-	resp, err = rm.sdkapi.CreateConfigurationSetWithContext(ctx, input)
+	resp, err = rm.sdkapi.CreateConfigurationSet(ctx, input)
 	rm.metrics.RecordAPICall("CREATE", "CreateConfigurationSet", err)
 	if err != nil {
 		return nil, err
@@ -199,7 +193,7 @@ func (rm *resourceManager) sdkDelete(
 	}
 	var resp *svcsdk.DeleteConfigurationSetOutput
 	_ = resp
-	resp, err = rm.sdkapi.DeleteConfigurationSetWithContext(ctx, input)
+	resp, err = rm.sdkapi.DeleteConfigurationSet(ctx, input)
 	rm.metrics.RecordAPICall("DELETE", "DeleteConfigurationSet", err)
 	return nil, err
 }
@@ -212,7 +206,7 @@ func (rm *resourceManager) newDeleteRequestPayload(
 	res := &svcsdk.DeleteConfigurationSetInput{}
 
 	if r.ko.Spec.Name != nil {
-		res.SetConfigurationSetName(*r.ko.Spec.Name)
+		res.ConfigurationSetName = r.ko.Spec.Name
 	}
 
 	return res, nil
@@ -320,11 +314,12 @@ func (rm *resourceManager) terminalAWSError(err error) bool {
 	if err == nil {
 		return false
 	}
-	awsErr, ok := ackerr.AWSError(err)
-	if !ok {
+
+	var terminalErr smithy.APIError
+	if !errors.As(err, &terminalErr) {
 		return false
 	}
-	switch awsErr.Code() {
+	switch terminalErr.ErrorCode() {
 	case "ConfigurationSetAlreadyExists",
 		"InvalidConfigurationSet":
 		return true

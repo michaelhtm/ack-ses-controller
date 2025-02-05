@@ -1,3 +1,3 @@
-	input.SetConfigurationSet(&svcsdk.ConfigurationSet{
+	input.ConfigurationSet = &svcsdktypes.ConfigurationSet{
 		Name: desired.ko.Spec.Name,
-	})
+	}
